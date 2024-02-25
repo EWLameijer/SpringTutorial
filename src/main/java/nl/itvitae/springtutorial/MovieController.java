@@ -2,7 +2,9 @@ package nl.itvitae.springtutorial;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,8 +28,13 @@ public class MovieController {
     }
 
     @PostMapping
-    public void add(@RequestBody Movie movie) {
+    public ResponseEntity<Movie> add(@RequestBody Movie movie, UriComponentsBuilder ucb) {
         movieRepository.save(movie);
+        URI locationOfNewMovie = ucb
+                .path("{id}")
+                .buildAndExpand(movie.getId())
+                .toUri();
+        return ResponseEntity.created(locationOfNewMovie).body(movie);
     }
 
     @GetMapping("search/titles/{title}")
