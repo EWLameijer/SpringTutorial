@@ -31,7 +31,7 @@ public class MovieController {
 
     @GetMapping("search/titles/{title}")
     public ResponseEntity<Movie> findByTitle(@PathVariable String title) {
-        Optional<Movie> possibleMovie = movieRepository.findByTitle(title);
+        Optional<Movie> possibleMovie = movieRepository.findByTitleIgnoringCase(title);
         return possibleMovie.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
