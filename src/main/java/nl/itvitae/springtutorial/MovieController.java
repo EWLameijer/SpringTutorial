@@ -1,5 +1,7 @@
 package nl.itvitae.springtutorial;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -28,8 +30,12 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<Movie> add(@RequestBody Movie movie, UriComponentsBuilder ucb) {
-        if (movie.getId() != null) return ResponseEntity.badRequest().build();
+    public ResponseEntity<?> add(@RequestBody Movie movie, UriComponentsBuilder ucb) {
+        if (movie.getId() != null) {
+            var problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
+                    "the body of this POST request should not contain an id value, as that is assigned by the database");
+            return ResponseEntity.badRequest().body(problemDetail);
+        }
         movieRepository.save(movie);
         URI locationOfNewMovie = ucb
                 .path("{id}")
