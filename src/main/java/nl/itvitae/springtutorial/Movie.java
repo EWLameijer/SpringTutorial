@@ -21,6 +21,10 @@ public class Movie {
         this.rating = rating;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getTitle() {
         return title;
     }
