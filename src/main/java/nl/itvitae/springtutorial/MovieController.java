@@ -31,8 +31,7 @@ public class MovieController {
     }
 
     @GetMapping("search/titles/{title}")
-    public ResponseEntity<Iterable<Movie>> findByTitle(@PathVariable String title) {
-        List<Movie> movies = movieRepository.findByTitleIgnoringCaseContaining(title);
-        return movies.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(movies);
+    public Iterable<Movie> findByTitle(@PathVariable String title) {
+        return movieRepository.findByTitleIgnoringCaseContaining(title);
     }
 }
