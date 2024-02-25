@@ -41,7 +41,10 @@ public class MovieController {
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable long id) {
-        movieRepository.deleteById(id);
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        if (movieRepository.findById(id).isPresent()) {
+            movieRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else return ResponseEntity.notFound().build();
     }
 }
