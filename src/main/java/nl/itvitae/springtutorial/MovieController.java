@@ -3,32 +3,24 @@ package nl.itvitae.springtutorial;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class MovieController {
+    private final MovieRepository movieRepository;
 
-    record Movie(String title, int rating) {}
-
-    private List<Movie> movies = new ArrayList<>(List.of(
-            new Movie("Up", 5),
-            new Movie("Citizen Kane", 2),
-            new Movie("The Grand Budapest Hotel", 3)));
+    public MovieController(MovieRepository movieRepository) {
+        this.movieRepository = movieRepository;
+    }
 
     @GetMapping("{id}")
-    public ResponseEntity<Movie> getMovieById(@PathVariable int id) {
-        if (id>=0 && id < movies.size()) return ResponseEntity.ok(movies.get(id));
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Movie> getById(@PathVariable long id) {
+        Optional<Movie> possibleMovie = movieRepository.findById(id);
+        return possibleMovie.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
-    public Iterable<Movie> getAllMovies() {
-        return movies;
-    }
-
-    @PostMapping
-    public void addMovie(@RequestBody Movie movie) {
-        movies.add(movie);
+    public Iterable<Movie> getAll() {
+        return movieRepository.findAll();
     }
 }
