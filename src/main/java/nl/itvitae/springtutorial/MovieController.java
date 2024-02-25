@@ -22,6 +22,11 @@ public class MovieController {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping
+    public Iterable<Movie> getAllMovies() {
+        return movies;
+    }
+
     @PostMapping
     public void addMovie(@RequestBody Movie movie) {
         movies.add(movie);
