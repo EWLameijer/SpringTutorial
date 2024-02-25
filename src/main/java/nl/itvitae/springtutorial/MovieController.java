@@ -3,6 +3,7 @@ package nl.itvitae.springtutorial;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -30,8 +31,8 @@ public class MovieController {
     }
 
     @GetMapping("search/titles/{title}")
-    public ResponseEntity<Movie> findByTitle(@PathVariable String title) {
-        Optional<Movie> possibleMovie = movieRepository.findByTitleIgnoringCase(title);
-        return possibleMovie.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Iterable<Movie>> findByTitle(@PathVariable String title) {
+        List<Movie> movies = movieRepository.findByTitleIgnoringCaseContaining(title);
+        return movies.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(movies);
     }
 }
