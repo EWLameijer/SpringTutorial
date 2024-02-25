@@ -23,4 +23,9 @@ public class MovieController {
     public Iterable<Movie> getAll() {
         return movieRepository.findAll();
     }
+
+    @PostMapping
+    public void add(@RequestBody Movie movie) {
+        movieRepository.save(movie);
+    }
 }
