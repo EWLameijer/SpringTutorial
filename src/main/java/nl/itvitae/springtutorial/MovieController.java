@@ -28,4 +28,10 @@ public class MovieController {
     public void add(@RequestBody Movie movie) {
         movieRepository.save(movie);
     }
+
+    @GetMapping("search/titles/{title}")
+    public ResponseEntity<Movie> findByTitle(@PathVariable String title) {
+        Optional<Movie> possibleMovie = movieRepository.findByTitle(title);
+        return possibleMovie.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }
