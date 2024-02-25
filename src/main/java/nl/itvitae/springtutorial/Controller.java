@@ -9,4 +9,9 @@ public class Controller {
     public String message() {
         return "Welcome to this beautiful REST controller!";
     }
+
+    @GetMapping("second")
+    public String secondMessage() {
+        return "You are reading the second message";
+    }
 }
