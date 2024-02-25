@@ -29,6 +29,7 @@ public class MovieController {
 
     @PostMapping
     public ResponseEntity<Movie> add(@RequestBody Movie movie, UriComponentsBuilder ucb) {
+        if (movie.getId() != null) return ResponseEntity.badRequest().build();
         movieRepository.save(movie);
         URI locationOfNewMovie = ucb
                 .path("{id}")
