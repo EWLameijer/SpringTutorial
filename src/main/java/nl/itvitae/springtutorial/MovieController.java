@@ -8,8 +8,13 @@ public class MovieController {
 
     record Movie(String title, int rating) {}
 
-    @GetMapping
-    public Movie getMovie() {
+    @GetMapping("up")
+    public Movie getUp() {
         return new Movie("Up", 5);
+    }
+
+    @GetMapping("citizen-kane")
+    public Movie getCitizenKane() {
+        return new Movie("Citizen Kane", 2);
     }
 }
