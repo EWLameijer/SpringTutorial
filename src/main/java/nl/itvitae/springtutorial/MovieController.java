@@ -39,4 +39,9 @@ public class MovieController {
     public Iterable<Movie> findByRating(@PathVariable int rating) {
         return movieRepository.findByRating(rating);
     }
+
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable long id) {
+        movieRepository.deleteById(id);
+    }
 }
