@@ -34,4 +34,9 @@ public class MovieController {
     public Iterable<Movie> findByTitle(@PathVariable String title) {
         return movieRepository.findByTitleIgnoringCaseContaining(title);
     }
+
+    @GetMapping("search/ratings/{rating}")
+    public Iterable<Movie> findByRating(@PathVariable int rating) {
+        return movieRepository.findByRating(rating);
+    }
 }
