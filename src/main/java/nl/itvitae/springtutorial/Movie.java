@@ -15,8 +15,6 @@ public class Movie {
 
     private String title;
 
-    private int rating;
-
     private Set<Review> reviews = new HashSet<>();
 
     Movie() {
@@ -34,15 +32,7 @@ public class Movie {
         return title;
     }
 
-    public int getRating() {
-        return rating;
-    }
-
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
     }
 }

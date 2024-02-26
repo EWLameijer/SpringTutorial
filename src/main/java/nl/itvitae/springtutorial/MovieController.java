@@ -89,8 +89,6 @@ public class MovieController {
         var movie = possibleOriginalMovie.get();
         var newTitle = changedMovie.getTitle();
         if (newTitle != null) movie.setTitle(newTitle);
-        var newRating = changedMovie.getRating();
-        if (newRating != 0) movie.setRating(newRating);
         movieRepository.save(movie);
         return ResponseEntity.ok(movie);
     }
