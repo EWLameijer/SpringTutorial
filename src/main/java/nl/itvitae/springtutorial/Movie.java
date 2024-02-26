@@ -16,7 +16,7 @@ public class Movie {
 
     private String title;
 
-    @OneToMany
+    @OneToMany(mappedBy = "movie")
     private Set<Review> reviews = new HashSet<>();
 
     Movie() {
