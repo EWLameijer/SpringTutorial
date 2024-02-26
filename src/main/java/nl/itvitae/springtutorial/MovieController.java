@@ -75,11 +75,8 @@ public class MovieController {
     @PatchMapping("{id}")
     public ResponseEntity<?> patch(@RequestBody Movie changedMovie, @PathVariable long id) {
         var idFromBody = changedMovie.getId();
-        if (idFromBody != null) {
-            var problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
-                    "id cannot be changed, please give only changeable fields in the body");
-            return ResponseEntity.badRequest().body(problemDetail);
-        }
+        if (idFromBody != null)
+            throw new BadRequestException("id cannot be changed, please pass only changeable fields in the body");
         var possibleOriginalMovie = movieRepository.findById(id);
         if (possibleOriginalMovie.isEmpty()) return ResponseEntity.notFound().build();
         var movie = possibleOriginalMovie.get();
