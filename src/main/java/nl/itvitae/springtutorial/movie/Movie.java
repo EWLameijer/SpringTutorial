@@ -38,4 +38,8 @@ public class Movie {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    public Set<Review> getReviews() {
+        return reviews;
+    }
 }
