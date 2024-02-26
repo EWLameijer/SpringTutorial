@@ -24,9 +24,8 @@ public class MovieController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Movie> getById(@PathVariable long id) {
-        Optional<Movie> possibleMovie = movieRepository.findById(id);
-        return possibleMovie.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<MovieDto> getById(@PathVariable long id) {
+        return movieRepository.findById(id).map(MovieDto::from).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("reviews/{id}")
