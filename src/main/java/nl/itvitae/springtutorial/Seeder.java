@@ -1,5 +1,11 @@
 package nl.itvitae.springtutorial;
 
+import nl.itvitae.springtutorial.movie.Movie;
+import nl.itvitae.springtutorial.movie.MovieRepository;
+import nl.itvitae.springtutorial.review.Review;
+import nl.itvitae.springtutorial.review.ReviewRepository;
+import nl.itvitae.springtutorial.user.User;
+import nl.itvitae.springtutorial.user.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 

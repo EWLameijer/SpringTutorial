@@ -1,9 +1,10 @@
-package nl.itvitae.springtutorial;
+package nl.itvitae.springtutorial.movie;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import nl.itvitae.springtutorial.review.Review;
 
 import java.util.HashSet;
 import java.util.Set;

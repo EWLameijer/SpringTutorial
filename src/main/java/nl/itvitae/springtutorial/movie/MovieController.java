@@ -1,5 +1,6 @@
-package nl.itvitae.springtutorial;
+package nl.itvitae.springtutorial.movie;
 
+import nl.itvitae.springtutorial.BadRequestException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 @RestController

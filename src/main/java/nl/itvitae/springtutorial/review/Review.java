@@ -1,9 +1,11 @@
-package nl.itvitae.springtutorial;
+package nl.itvitae.springtutorial.review;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import nl.itvitae.springtutorial.movie.Movie;
+import nl.itvitae.springtutorial.user.User;
 
 @Entity
 public class Review {

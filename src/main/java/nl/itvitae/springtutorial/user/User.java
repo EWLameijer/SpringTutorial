@@ -1,4 +1,4 @@
-package nl.itvitae.springtutorial;
+package nl.itvitae.springtutorial.user;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

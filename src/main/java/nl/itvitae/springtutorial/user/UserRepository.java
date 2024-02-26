@@ -1,4 +1,4 @@
-package nl.itvitae.springtutorial;
+package nl.itvitae.springtutorial.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
