@@ -56,11 +56,6 @@ public class MovieController {
         return movieRepository.findByTitleIgnoringCaseContaining(title);
     }
 
-    @GetMapping("search/ratings/{rating}")
-    public Iterable<Movie> findByRating(@PathVariable int rating) {
-        return movieRepository.findByRating(rating);
-    }
-
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
         if (movieRepository.findById(id).isPresent()) {

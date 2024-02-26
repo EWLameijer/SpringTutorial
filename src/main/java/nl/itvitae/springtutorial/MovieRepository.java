@@ -7,6 +7,4 @@ import java.util.Optional;
 
 public interface MovieRepository extends JpaRepository<Movie, Long> {
     Iterable<Movie> findByTitleIgnoringCaseContaining(String title);
-
-    Iterable<Movie> findByRating(int rating);
 }

@@ -3,6 +3,7 @@ package nl.itvitae.springtutorial;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,6 +16,7 @@ public class Movie {
 
     private String title;
 
+    @OneToMany
     private Set<Review> reviews = new HashSet<>();
 
     Movie() {
