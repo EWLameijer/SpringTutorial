@@ -1,5 +1,6 @@
 package nl.itvitae.springtutorial;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,8 @@ public class MovieController {
     }
 
     @GetMapping
-    public Iterable<Movie> getAll() {
-        return movieRepository.findAll();
+    public Iterable<Movie> getAll(Pageable pageable) {
+        return movieRepository.findAll(pageable);
     }
 
     @PostMapping
