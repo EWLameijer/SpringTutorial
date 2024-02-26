@@ -14,7 +14,8 @@ public class Movie {
 
     private int rating;
 
-    Movie() {}
+    Movie() {
+    }
 
     public Movie(String title, int rating) {
         this.title = title;
@@ -31,5 +32,13 @@ public class Movie {
 
     public int getRating() {
         return rating;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }

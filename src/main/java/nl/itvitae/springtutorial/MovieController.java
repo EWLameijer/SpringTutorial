@@ -71,4 +71,23 @@ public class MovieController {
         movieRepository.save(movie);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("{id}")
+    public ResponseEntity<?> patch(@RequestBody Movie changedMovie, @PathVariable long id) {
+        var idFromBody = changedMovie.getId();
+        if (idFromBody != null) {
+            var problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
+                    "id cannot be changed, please give only changeable fields in the body");
+            return ResponseEntity.badRequest().body(problemDetail);
+        }
+        var possibleOriginalMovie = movieRepository.findById(id);
+        if (possibleOriginalMovie.isEmpty()) return ResponseEntity.notFound().build();
+        var movie = possibleOriginalMovie.get();
+        var newTitle = changedMovie.getTitle();
+        if (newTitle != null) movie.setTitle(newTitle);
+        var newRating = changedMovie.getRating();
+        if (newRating != 0) movie.setRating(newRating);
+        movieRepository.save(movie);
+        return ResponseEntity.ok(movie);
+    }
 }
