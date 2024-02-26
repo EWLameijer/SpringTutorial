@@ -62,17 +62,12 @@ public class MovieController {
         } else return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<?> replace(@RequestBody Movie movie, @PathVariable long id) {
-        var idFromBody = movie.getId();
-        if (idFromBody != null && idFromBody != id) {
-            var problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
-                    "ids given by path and body are inconsistent, and the id of an item should not be changed");
-            return ResponseEntity.badRequest().body(problemDetail);
-        }
+    @PutMapping
+    public ResponseEntity<Void> replace(@RequestBody Movie movie) {
+        var id = movie.getId();
+        if (id == null) return ResponseEntity.badRequest().build();
         var possibleOriginalMovie = movieRepository.findById(id);
         if (possibleOriginalMovie.isEmpty()) return ResponseEntity.notFound().build();
-        movie.setId(id);
         movieRepository.save(movie);
         return ResponseEntity.noContent().build();
     }
