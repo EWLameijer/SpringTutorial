@@ -4,6 +4,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 public class Movie {
     @Id
@@ -14,12 +17,13 @@ public class Movie {
 
     private int rating;
 
+    private Set<Review> reviews = new HashSet<>();
+
     Movie() {
     }
 
-    public Movie(String title, int rating) {
+    public Movie(String title) {
         this.title = title;
-        this.rating = rating;
     }
 
     public Long getId() {
