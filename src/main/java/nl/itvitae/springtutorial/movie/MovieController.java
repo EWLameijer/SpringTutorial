@@ -38,12 +38,12 @@ public class MovieController {
     }
 
     @GetMapping
-    public Iterable<Movie> getAll(Pageable pageable) {
+    public Iterable<MovieDto> getAll(Pageable pageable) {
         return movieRepository.findAll(PageRequest.of(
                 pageable.getPageNumber(),
                 Math.min(pageable.getPageSize(), 3),
                 pageable.getSortOr(Sort.by(Sort.Direction.DESC, "title"))
-        ));
+        )).map(MovieDto::from);
     }
 
     @PostMapping
