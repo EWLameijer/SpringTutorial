@@ -64,8 +64,8 @@ public class MovieController {
     }
 
     @GetMapping("search/titles/{title}")
-    public Iterable<Movie> findByTitle(@PathVariable String title) {
-        return movieRepository.findByTitleIgnoringCaseContaining(title);
+    public Iterable<MovieDto> findByTitle(@PathVariable String title) {
+        return movieRepository.findByTitleIgnoringCaseContaining(title).stream().map(MovieDto::from).toList();
     }
 
     @DeleteMapping("{id}")
