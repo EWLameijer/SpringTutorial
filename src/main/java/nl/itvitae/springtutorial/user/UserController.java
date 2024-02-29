@@ -9,6 +9,7 @@ import java.net.URI;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("users")
 public class UserController {
     private final UserRepository userRepository;
 
@@ -25,12 +26,12 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("users/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<?> getById(@PathVariable UUID id) {
         return userRepository.findById(id).map(UserDto::from).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("users/register")
+    @PostMapping("register")
     public ResponseEntity<UserDto> register(@RequestBody UserRegistrationDto userRegistrationDto, UriComponentsBuilder ucb) {
         var username = userRegistrationDto.username.trim();
         if (username.isEmpty()) throw new BadRequestException("username should not be blank");
