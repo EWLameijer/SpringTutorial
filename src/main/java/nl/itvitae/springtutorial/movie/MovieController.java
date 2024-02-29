@@ -87,7 +87,7 @@ public class MovieController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<?> patch(@RequestBody Movie changedMovie, @PathVariable long id) {
+    public ResponseEntity<MovieDto> patch(@RequestBody Movie changedMovie, @PathVariable long id) {
         var idFromBody = changedMovie.getId();
         if (idFromBody != null)
             throw new BadRequestException("id cannot be changed, please pass only changeable fields in the body");
@@ -97,6 +97,6 @@ public class MovieController {
         var newTitle = changedMovie.getTitle();
         if (newTitle != null) movie.setTitle(newTitle);
         movieRepository.save(movie);
-        return ResponseEntity.ok(movie);
+        return ResponseEntity.ok(MovieDto.from(movie));
     }
 }
