@@ -2,9 +2,7 @@ package nl.itvitae.springtutorial.user;
 
 import nl.itvitae.springtutorial.BadRequestException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -17,15 +15,23 @@ public class UserController {
     record UserRegistrationDto(String username, String password) {
     }
 
-    record UserRegistrationResultDto(UUID id, String username) {
+    record UserDto(UUID id, String username) {
+        static UserDto from(User user) {
+            return new UserDto(user.getId(), user.getUsername());
+        }
     }
 
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    @GetMapping("users/{id}")
+    public ResponseEntity<?> getById(@PathVariable UUID id) {
+        return userRepository.findById(id).map(UserDto::from).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping("users/register")
-    public ResponseEntity<UserRegistrationResultDto> register(@RequestBody UserRegistrationDto userRegistrationDto, UriComponentsBuilder ucb) {
+    public ResponseEntity<UserDto> register(@RequestBody UserRegistrationDto userRegistrationDto, UriComponentsBuilder ucb) {
         var username = userRegistrationDto.username.trim();
         if (username.isEmpty()) throw new BadRequestException("username should not be blank");
 
@@ -37,9 +43,9 @@ public class UserController {
         var newUser = new User(username, password);
         userRepository.save(newUser);
         URI locationOfNewUser = ucb
-                .path("{id}")
+                .path("users/{id}")
                 .buildAndExpand(newUser.getId())
                 .toUri();
-        return ResponseEntity.created(locationOfNewUser).body(new UserRegistrationResultDto(newUser.getId(), newUser.getUsername()));
+        return ResponseEntity.created(locationOfNewUser).body(UserDto.from(newUser));
     }
 }
