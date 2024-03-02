@@ -4,10 +4,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import nl.itvitae.springtutorial.movie.Movie;
 import nl.itvitae.springtutorial.user.User;
 
 @Entity
+@NoArgsConstructor
+@Getter
 public class Review {
     @Id
     @GeneratedValue
@@ -23,25 +27,10 @@ public class Review {
 
     private String text;
 
-    Review() {
-    }
-
     public Review(Movie movie, User user, int rating, String text) {
         this.movie = movie;
         this.user = user;
         this.rating = rating;
         this.text = text;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public int getRating() {
-        return rating;
-    }
-
-    public String getText() {
-        return text;
     }
 }

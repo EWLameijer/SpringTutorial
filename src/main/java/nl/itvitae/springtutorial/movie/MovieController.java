@@ -1,5 +1,6 @@
 package nl.itvitae.springtutorial.movie;
 
+import lombok.RequiredArgsConstructor;
 import nl.itvitae.springtutorial.BadRequestException;
 import nl.itvitae.springtutorial.review.ReviewDto;
 import org.springframework.data.domain.PageRequest;
@@ -14,12 +15,9 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequiredArgsConstructor
 public class MovieController {
     private final MovieRepository movieRepository;
-
-    public MovieController(MovieRepository movieRepository) {
-        this.movieRepository = movieRepository;
-    }
 
     @GetMapping("{id}")
     public ResponseEntity<MovieDto> getById(@PathVariable long id) {

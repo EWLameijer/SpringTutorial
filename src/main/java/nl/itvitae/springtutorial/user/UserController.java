@@ -1,5 +1,6 @@
 package nl.itvitae.springtutorial.user;
 
+import lombok.RequiredArgsConstructor;
 import nl.itvitae.springtutorial.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,12 +11,9 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("users")
+@RequiredArgsConstructor
 public class UserController {
     private final UserRepository userRepository;
-
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getById(@PathVariable UUID id) {

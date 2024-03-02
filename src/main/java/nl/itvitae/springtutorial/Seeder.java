@@ -1,5 +1,6 @@
 package nl.itvitae.springtutorial;
 
+import lombok.RequiredArgsConstructor;
 import nl.itvitae.springtutorial.movie.Movie;
 import nl.itvitae.springtutorial.movie.MovieRepository;
 import nl.itvitae.springtutorial.review.Review;
@@ -12,18 +13,13 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class Seeder implements CommandLineRunner {
     private final MovieRepository movieRepository;
 
     private final UserRepository userRepository;
 
     private final ReviewRepository reviewRepository;
-
-    public Seeder(MovieRepository movieRepository, UserRepository userRepository, ReviewRepository reviewRepository) {
-        this.movieRepository = movieRepository;
-        this.userRepository = userRepository;
-        this.reviewRepository = reviewRepository;
-    }
 
     @Override
     public void run(String... args) {
