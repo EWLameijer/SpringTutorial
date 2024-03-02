@@ -2,7 +2,6 @@ package nl.itvitae.springtutorial.movie;
 
 import lombok.RequiredArgsConstructor;
 import nl.itvitae.springtutorial.BadRequestException;
-import nl.itvitae.springtutorial.review.ReviewDto;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -11,26 +10,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("movies")
 public class MovieController {
     private final MovieRepository movieRepository;
 
     @GetMapping("{id}")
     public ResponseEntity<MovieDto> getById(@PathVariable long id) {
         return movieRepository.findById(id).map(MovieDto::from).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("reviews/{id}")
-    public ResponseEntity<List<ReviewDto>> getReviews(@PathVariable long id) {
-        Optional<Movie> possibleMovie = movieRepository.findById(id);
-        if (possibleMovie.isEmpty()) return ResponseEntity.notFound().build();
-        var movie = possibleMovie.get();
-        var movieReviews = movie.getReviews();
-        return ResponseEntity.ok(movieReviews.stream().map(ReviewDto::from).toList());
     }
 
     @GetMapping
