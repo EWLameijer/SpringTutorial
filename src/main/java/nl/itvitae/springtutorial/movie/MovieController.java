@@ -1,13 +1,10 @@
 package nl.itvitae.springtutorial.movie;
 
 import nl.itvitae.springtutorial.BadRequestException;
-import nl.itvitae.springtutorial.review.Review;
 import nl.itvitae.springtutorial.review.ReviewDto;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -15,7 +12,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @RestController
 public class MovieController {
@@ -49,18 +45,13 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody Movie movie, UriComponentsBuilder ucb) {
-        if (movie.getId() != null) {
-            var problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
-                    "the body of this POST request should not contain an id value, as that is assigned by the database");
-            return ResponseEntity.badRequest().body(problemDetail);
-        }
+    public ResponseEntity<MovieDto> add(@RequestBody Movie movie, UriComponentsBuilder ucb) {
+        if (movie.getId() != null)
+            throw new BadRequestException("the body of this POST request should not contain an id value, as that is assigned by the database");
+
         movieRepository.save(movie);
-        URI locationOfNewMovie = ucb
-                .path("{id}")
-                .buildAndExpand(movie.getId())
-                .toUri();
-        return ResponseEntity.created(locationOfNewMovie).body(movie);
+        URI locationOfNewMovie = ucb.path("{id}").buildAndExpand(movie.getId()).toUri();
+        return ResponseEntity.created(locationOfNewMovie).body(MovieDto.from(movie));
     }
 
     @GetMapping("search/titles/{title}")
@@ -79,7 +70,7 @@ public class MovieController {
     @PutMapping
     public ResponseEntity<Void> replace(@RequestBody Movie movie) {
         var id = movie.getId();
-        if (id == null) return ResponseEntity.badRequest().build();
+        if (id == null) throw new BadRequestException("PUT requires the id of the movie in the body");
         var possibleOriginalMovie = movieRepository.findById(id);
         if (possibleOriginalMovie.isEmpty()) return ResponseEntity.notFound().build();
         movieRepository.save(movie);

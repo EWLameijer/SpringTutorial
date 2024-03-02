@@ -13,30 +13,21 @@ import java.util.UUID;
 public class UserController {
     private final UserRepository userRepository;
 
-    record UserRegistrationDto(String username, String password) {
-    }
-
-    record UserDto(UUID id, String username) {
-        static UserDto from(User user) {
-            return new UserDto(user.getId(), user.getUsername());
-        }
-    }
-
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> getById(@PathVariable UUID id) {
+    public ResponseEntity<UserDto> getById(@PathVariable UUID id) {
         return userRepository.findById(id).map(UserDto::from).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("register")
     public ResponseEntity<UserDto> register(@RequestBody UserRegistrationDto userRegistrationDto, UriComponentsBuilder ucb) {
-        var username = userRegistrationDto.username.trim();
+        var username = userRegistrationDto.username().trim();
         if (username.isEmpty()) throw new BadRequestException("username should not be blank");
 
-        var password = userRegistrationDto.password.trim();
+        var password = userRegistrationDto.password().trim();
         if (password.isEmpty()) throw new BadRequestException("password should not be blank");
 
         var possibleUser = userRepository.findByUsername(username);

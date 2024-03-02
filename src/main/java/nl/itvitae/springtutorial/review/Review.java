@@ -1,6 +1,5 @@
 package nl.itvitae.springtutorial.review;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -17,7 +16,6 @@ public class Review {
     @ManyToOne
     private User user;
 
-    @JsonBackReference
     @ManyToOne
     private Movie movie;
 
@@ -33,10 +31,6 @@ public class Review {
         this.user = user;
         this.rating = rating;
         this.text = text;
-    }
-
-    public Movie getMovie() {
-        return movie;
     }
 
     public User getUser() {

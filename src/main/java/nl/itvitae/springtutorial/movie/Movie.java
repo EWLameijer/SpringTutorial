@@ -1,9 +1,8 @@
 package nl.itvitae.springtutorial.movie;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import nl.itvitae.springtutorial.review.Review;
 
@@ -18,9 +17,8 @@ public class Movie {
 
     private String title;
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "movie")
-    private Set<Review> reviews = new HashSet<>();
+    final private Set<Review> reviews = new HashSet<>();
 
     Movie() {
     }

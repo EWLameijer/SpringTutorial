@@ -26,7 +26,7 @@ public class Seeder implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if (movieRepository.count() == 0) {
             var up = new Movie("Up");
             var citizenKane = new Movie("Citizen Kane");
