@@ -1,9 +1,7 @@
 package nl.itvitae.springtutorial.user;
 
-import java.util.UUID;
-
-public record UserDto(UUID id, String username) {
+public record UserDto(String username) {
     static UserDto from(User user) {
-        return new UserDto(user.getId(), user.getUsername());
+        return new UserDto(user.getUsername());
     }
 }
