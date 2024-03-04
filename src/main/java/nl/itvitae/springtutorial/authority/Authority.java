@@ -5,7 +5,7 @@ import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Entity(name = "authorities")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Authority {
