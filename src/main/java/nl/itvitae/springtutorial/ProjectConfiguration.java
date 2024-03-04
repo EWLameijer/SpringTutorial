@@ -30,7 +30,11 @@ public class ProjectConfiguration {
         return httpSecurity
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(requests ->
-                        requests.anyRequest().authenticated())
+                        requests
+                                .requestMatchers("/users/register").permitAll()
+                                .requestMatchers("/movies/*").permitAll()
+                                .anyRequest().authenticated()
+                )
                 .build();
     }
 }
