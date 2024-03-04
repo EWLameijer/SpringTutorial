@@ -26,7 +26,7 @@ public class UserController {
 
         var possibleUser = userService.findByUsername(username);
         if (possibleUser.isPresent()) throw new BadRequestException("username already exists");
-        var newUser = userService.save(username, password);
+        var newUser = userService.save(username, password, UserRole.USER);
         URI locationOfNewUser = ucb
                 .path("users/{username}")
                 .buildAndExpand(newUser.getUsername())

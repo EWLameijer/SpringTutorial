@@ -9,6 +9,7 @@ import nl.itvitae.springtutorial.review.Review;
 import nl.itvitae.springtutorial.review.ReviewRepository;
 import nl.itvitae.springtutorial.user.User;
 import nl.itvitae.springtutorial.user.UserRepository;
+import nl.itvitae.springtutorial.user.UserRole;
 import nl.itvitae.springtutorial.user.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,8 +26,6 @@ public class Seeder implements CommandLineRunner {
 
     private final ReviewRepository reviewRepository;
 
-    private final AuthorityRepository authorityRepository;
-
     @Override
     public void run(String... args) {
         if (movieRepository.count() == 0) {
@@ -36,12 +35,8 @@ public class Seeder implements CommandLineRunner {
             var starWars = new Movie("Star Wars");
             movieRepository.saveAll(List.of(up, citizenKane, theGrandBudapest, starWars));
 
-            var me = userService.save("TheWub", "secret");
-            var testUser = userService.save("nn", "password");
-
-            var myRole = new Authority("TheWub", "ROLE_ADMIN");
-            var testRole = new Authority("nn", "ROLE_USER");
-            authorityRepository.saveAll(List.of(myRole, testRole));
+            var me = userService.save("TheWub", "secret", UserRole.ADMIN);
+            var testUser = userService.save("nn", "password", UserRole.USER);
 
             var myCitizenKaneReview = new Review(citizenKane, me, 2, "famous, but disappointing");
             var myUpReview = new Review(up, me, 5, "touching, surprising, and funny");

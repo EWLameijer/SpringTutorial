@@ -1,6 +1,8 @@
 package nl.itvitae.springtutorial.user;
 
 import lombok.RequiredArgsConstructor;
+import nl.itvitae.springtutorial.authority.Authority;
+import nl.itvitae.springtutorial.authority.AuthorityRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +15,10 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User save(String username, String password) {
+    private final AuthorityRepository authorityRepository;
+
+    public User save(String username, String password, UserRole role) {
+        authorityRepository.save(new Authority(username, role.toString()));
         return userRepository.save(new User(username, passwordEncoder.encode(password)));
     }
 
