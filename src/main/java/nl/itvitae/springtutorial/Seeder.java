@@ -9,6 +9,7 @@ import nl.itvitae.springtutorial.review.Review;
 import nl.itvitae.springtutorial.review.ReviewRepository;
 import nl.itvitae.springtutorial.user.User;
 import nl.itvitae.springtutorial.user.UserRepository;
+import nl.itvitae.springtutorial.user.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -20,11 +21,9 @@ import java.util.List;
 public class Seeder implements CommandLineRunner {
     private final MovieRepository movieRepository;
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     private final ReviewRepository reviewRepository;
-
-    private final PasswordEncoder passwordEncoder;
 
     private final AuthorityRepository authorityRepository;
 
@@ -37,9 +36,8 @@ public class Seeder implements CommandLineRunner {
             var starWars = new Movie("Star Wars");
             movieRepository.saveAll(List.of(up, citizenKane, theGrandBudapest, starWars));
 
-            var me = new User("TheWub", passwordEncoder.encode("secret"));
-            var testUser = new User("nn", passwordEncoder.encode("password"));
-            userRepository.saveAll(List.of(me, testUser));
+            var me = userService.save("TheWub", "secret");
+            var testUser = userService.save("nn", "password");
 
             var myRole = new Authority("TheWub", "ROLE_ADMIN");
             var testRole = new Authority("nn", "ROLE_USER");

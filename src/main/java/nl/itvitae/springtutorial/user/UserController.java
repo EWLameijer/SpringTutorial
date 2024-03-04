@@ -12,11 +12,11 @@ import java.net.URI;
 @RequestMapping("users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @GetMapping("{username}")
     public ResponseEntity<UserDto> getByUsername(@PathVariable String username) {
-        return userRepository.findById(username).map(UserDto::from).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return userService.findByUsername(username).map(UserDto::from).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("register")
@@ -24,10 +24,9 @@ public class UserController {
         var username = getValidInputOrThrow(userRegistrationDto.username(), "username");
         var password = getValidInputOrThrow(userRegistrationDto.password(), "password");
 
-        var possibleUser = userRepository.findByUsername(username);
+        var possibleUser = userService.findByUsername(username);
         if (possibleUser.isPresent()) throw new BadRequestException("username already exists");
-        var newUser = new User(username, password);
-        userRepository.save(newUser);
+        var newUser = userService.save(username, password);
         URI locationOfNewUser = ucb
                 .path("users/{username}")
                 .buildAndExpand(newUser.getUsername())
