@@ -21,22 +21,29 @@ public class ReviewController {
 
     private final UserRepository userRepository;
 
-    @PostMapping("{movieId}")
+    @PostMapping
     public ResponseEntity<ReviewDto> postReview(
-            @RequestBody Review review,
-            @PathVariable long movieId,
+            @RequestBody ReviewInputDto reviewInputDto,
             Principal principal,
             UriComponentsBuilder ucb) {
+        var movieId = reviewInputDto.movieId();
+        if (movieId == null) throw new BadRequestException("Creating a movie review requires the id of the movie.");
         var movie = movieRepository.findById(movieId).orElseThrow(() -> new BadRequestException("Movie with id '" + movieId + "' not found!"));
         var user = userRepository.findByUsername(principal.getName()).orElseThrow(() -> new IllegalArgumentException("User does not seem to exist!"));
         var possiblyExistingReview = reviewRepository.findByUserAndMovie(user, movie);
         if (possiblyExistingReview.isPresent())
             throw new BadRequestException("This user has already written a review for this movie.");
-        var rating = review.getRating();
+        var rating = reviewInputDto.rating();
         if (rating > 5 || rating < 1) throw new BadRequestException("Rating should be at least 1 and at most 5!");
-        var completeReview = new Review(movie, user, review.getRating(), review.getText());
+        var completeReview = new Review(movie, user, rating, reviewInputDto.text());
         reviewRepository.save(completeReview);
         URI locationOfNewReview = ucb.path("reviews/{id}").buildAndExpand(completeReview.getId()).toUri();
         return ResponseEntity.created(locationOfNewReview).body(ReviewDto.from(completeReview));
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<ReviewDto> get(@PathVariable long id) {
+        return reviewRepository.findById(id).map(review -> ResponseEntity.ok(ReviewDto.from(review)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
