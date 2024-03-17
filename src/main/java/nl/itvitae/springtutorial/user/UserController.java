@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("users")
@@ -15,8 +16,10 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("{username}")
-    public ResponseEntity<UserDto> getByUsername(@PathVariable String username) {
-        return userService.findByUsername(username).map(UserDto::from).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<UserDto> getUser(@PathVariable String username, Principal principal) {
+        if (!principal.getName().equals(username)) return ResponseEntity.notFound().build();
+        return userService.findByUsername(username).map(user -> ResponseEntity.ok(new UserDto(user.getUsername())))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("register")
