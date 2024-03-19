@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import nl.itvitae.springtutorial.movie.Movie;
 import nl.itvitae.springtutorial.user.User;
 
@@ -23,8 +24,10 @@ public class Review {
     @ManyToOne
     private Movie movie;
 
+    @Setter
     private int rating;
-
+    
+    @Setter
     private String text;
 
     public Review(Movie movie, User user, int rating, String text) {

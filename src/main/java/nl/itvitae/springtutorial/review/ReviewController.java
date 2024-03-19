@@ -34,11 +34,32 @@ public class ReviewController {
         if (possiblyExistingReview.isPresent())
             throw new BadRequestException("This user has already written a review for this movie.");
         var rating = reviewInputDto.rating();
-        if (rating > 5 || rating < 1) throw new BadRequestException("Rating should be at least 1 and at most 5!");
+        throwAtInvalidRating(rating);
         var completeReview = new Review(movie, user, rating, reviewInputDto.text());
         reviewRepository.save(completeReview);
         URI locationOfNewReview = ucb.path("reviews/{id}").buildAndExpand(completeReview.getId()).toUri();
         return ResponseEntity.created(locationOfNewReview).body(ReviewDto.from(completeReview));
+    }
+
+    private static void throwAtInvalidRating(int rating) {
+        if (rating > 5 || rating < 1) throw new BadRequestException("Rating should be at least 1 and at most 5!");
+    }
+
+    @PatchMapping("{id}")
+    public ResponseEntity<ReviewDto> patchReview(@RequestBody ReviewInputDto reviewInputDto, @PathVariable long id, Principal principal) {
+        var possiblyExistingReview = reviewRepository.findById(id);
+        if (possiblyExistingReview.isEmpty()) return ResponseEntity.notFound().build();
+        var currentReview = possiblyExistingReview.get();
+        if (reviewInputDto.movieId() != null)
+            throw new BadRequestException("You cannot reassign a review to a different movie");
+        var newText = reviewInputDto.text();
+        if (newText != null) currentReview.setText(newText);
+        var newRating = reviewInputDto.rating();
+        if (newRating != null) {
+            throwAtInvalidRating(newRating);
+            currentReview.setRating(newRating);
+        }
+        return ResponseEntity.ok(ReviewDto.from(reviewRepository.save(currentReview)));
     }
 
     @GetMapping("{id}")
