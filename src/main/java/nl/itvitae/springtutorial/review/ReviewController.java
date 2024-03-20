@@ -41,15 +41,13 @@ public class ReviewController {
         return ResponseEntity.created(locationOfNewReview).body(ReviewDto.from(completeReview));
     }
 
-    private static void throwAtInvalidRating(int rating) {
-        if (rating > 5 || rating < 1) throw new BadRequestException("Rating should be at least 1 and at most 5!");
-    }
-
     @PatchMapping("{id}")
     public ResponseEntity<ReviewDto> patchReview(@RequestBody ReviewInputDto reviewInputDto, @PathVariable long id, Principal principal) {
         var possiblyExistingReview = reviewRepository.findById(id);
         if (possiblyExistingReview.isEmpty()) return ResponseEntity.notFound().build();
         var currentReview = possiblyExistingReview.get();
+        if (!currentReview.getUser().getUsername().equals(principal.getName()))
+            return ResponseEntity.notFound().build();
         if (reviewInputDto.movieId() != null)
             throw new BadRequestException("You cannot reassign a review to a different movie");
         var newText = reviewInputDto.text();
@@ -60,6 +58,10 @@ public class ReviewController {
             currentReview.setRating(newRating);
         }
         return ResponseEntity.ok(ReviewDto.from(reviewRepository.save(currentReview)));
+    }
+
+    private static void throwAtInvalidRating(int rating) {
+        if (rating > 5 || rating < 1) throw new BadRequestException("Rating should be at least 1 and at most 5!");
     }
 
     @GetMapping("{id}")
