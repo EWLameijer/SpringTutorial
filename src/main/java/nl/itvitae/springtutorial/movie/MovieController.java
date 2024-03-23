@@ -35,6 +35,8 @@ public class MovieController {
     public ResponseEntity<MovieDto> add(@RequestBody Movie movie, UriComponentsBuilder ucb) {
         if (movie.getId() != null)
             throw new BadRequestException("the body of this POST request should not contain an id value, as that is assigned by the database");
+        if (movieRepository.existsByTitleIgnoringCase(movie.getTitle()))
+            throw new BadRequestException("A movie with this title already exists");
 
         movieRepository.save(movie);
         URI locationOfNewMovie = ucb.path("{id}").buildAndExpand(movie.getId()).toUri();

@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Movie> findByTitleIgnoringCaseContaining(String title);
+
+    boolean existsByTitleIgnoringCase(String title);
 }
