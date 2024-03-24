@@ -35,12 +35,19 @@ public class MovieController {
     public ResponseEntity<MovieDto> add(@RequestBody Movie movie, UriComponentsBuilder ucb) {
         if (movie.getId() != null)
             throw new BadRequestException("the body of this POST request should not contain an id value, as that is assigned by the database");
-        if (movieRepository.existsByTitleIgnoringCase(movie.getTitle()))
-            throw new BadRequestException("A movie with this title already exists");
+        throwAtAbsentOrAlreadyTakenTitle(movie);
 
         movieRepository.save(movie);
         URI locationOfNewMovie = ucb.path("{id}").buildAndExpand(movie.getId()).toUri();
         return ResponseEntity.created(locationOfNewMovie).body(MovieDto.from(movie));
+    }
+
+    private void throwAtAbsentOrAlreadyTakenTitle(Movie movie) {
+        if (movie.getTitle() == null) throw new BadRequestException("A movie needs a title!");
+        var title = movie.getTitle().trim();
+        if (title.isEmpty()) throw new BadRequestException("A movie needs a non-blank title!");
+        if (movieRepository.existsByTitleIgnoringCase(title))
+            throw new BadRequestException("A movie with this title already exists");
     }
 
     @GetMapping("search/titles/{title}")
@@ -56,26 +63,17 @@ public class MovieController {
         } else return ResponseEntity.notFound().build();
     }
 
-    @PutMapping
-    public ResponseEntity<Void> replace(@RequestBody Movie movie) {
-        var id = movie.getId();
-        if (id == null) throw new BadRequestException("PUT requires the id of the movie in the body");
-        var possibleOriginalMovie = movieRepository.findById(id);
-        if (possibleOriginalMovie.isEmpty()) return ResponseEntity.notFound().build();
-        movieRepository.save(movie);
-        return ResponseEntity.noContent().build();
-    }
-
     @PatchMapping("{id}")
     public ResponseEntity<MovieDto> patch(@RequestBody Movie changedMovie, @PathVariable long id) {
-        var idFromBody = changedMovie.getId();
-        if (idFromBody != null)
-            throw new BadRequestException("id cannot be changed, please pass only changeable fields in the body");
+        if (changedMovie.getId() != null)
+            throw new BadRequestException("Id cannot be changed, please pass only changeable fields in the body.");
         var possibleOriginalMovie = movieRepository.findById(id);
         if (possibleOriginalMovie.isEmpty()) return ResponseEntity.notFound().build();
         var movie = possibleOriginalMovie.get();
-        var newTitle = changedMovie.getTitle();
-        if (newTitle != null) movie.setTitle(newTitle);
+        if (changedMovie.getTitle() == null) throw new BadRequestException("No updates requested.");
+        throwAtAbsentOrAlreadyTakenTitle(changedMovie);
+        var newTitle = changedMovie.getTitle().trim();
+        movie.setTitle(newTitle);
         movieRepository.save(movie);
         return ResponseEntity.ok(MovieDto.from(movie));
     }
